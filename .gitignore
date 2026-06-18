@@ -1,0 +1,11 @@
+# Entorno virtual
+.venv/
+__pycache__/
+
+# Archivos de entorno y credenciales
+.env
+credentials.json
+token.json
+
+# Base de datos local
+*.db
