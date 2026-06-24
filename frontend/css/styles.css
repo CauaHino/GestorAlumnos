@@ -1,0 +1,374 @@
+/* ==========================================
+   1. VARIABLES Y DISEÑO BASE (TOKENS)
+   ========================================== */
+:root {
+    /* Paleta Zinc Dark Mode */
+    --bg-base: #09090b;       /* Fondo principal */
+    --bg-surface: #18181b;    /* Fondo de tarjetas y modales */
+    --bg-input: #27272a;      /* Fondo de campos de texto */
+    
+    --border-light: #3f3f46;  /* Bordes sutiles */
+    --border-focus: #a1a1aa;  /* Borde al hacer foco */
+    
+    --text-primary: #fafafa;  /* Texto principal (no es blanco puro) */
+    --text-muted: #a1a1aa;    /* Texto secundario */
+    
+    --accent: #e4e4e7;        /* Color de botones primarios */
+    --accent-hover: #ffffff;
+    --accent-text: #000000;
+    
+    --danger: #ef4444;        /* Botones destructivos o alertas */
+    
+    --font-stack: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: radial-gradient(circle at 50% 0%, #1c1c21 0%, var(--bg-base) 70%);
+    background-attachment: fixed;
+    color: var(--text-primary);
+    font-family: var(--font-stack);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    min-height: 100vh;
+}
+
+/* ==========================================
+   2. TIPOGRAFÍA Y ENLACES
+   ========================================== */
+h1, h2, h3 {
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    color: var(--text-primary);
+}
+
+p {
+    color: var(--text-muted);
+}
+
+a {
+    color: var(--text-primary);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--text-muted);
+}
+
+/* ==========================================
+   3. FORMULARIOS GLOBALES (Login, Registro, Modales)
+   ========================================== */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    max-width: 360px;
+    margin: 40px auto; /* Centrado para login/registro */
+}
+
+label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: -8px;
+    color: var(--text-muted);
+}
+
+input {
+    background-color: transparent;
+    border: 1px solid var(--border-light);
+    color: var(--text-primary);
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease, outline 0.2s ease;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 1px var(--border-focus);
+}
+
+input::placeholder {
+    color: #52525b;
+}
+
+/* Chrome, Safari, Edge, Opera - Quitar flechas de los input number */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+button {
+    background-color: var(--accent);
+    color: var(--accent-text);
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    font-family: inherit;
+}
+
+button:hover {
+    background-color: var(--accent-hover);
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* ==========================================
+   4. ESTRUCTURA DEL PANEL DE ASIGNATURAS 
+   ========================================== */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 24px;
+    margin-bottom: 40px;
+    /* Línea separadora con degradado para que se desvanezca en los bordes */
+    border-bottom: 1px solid transparent;
+    background: linear-gradient(90deg, rgba(63, 63, 70, 0) 0%, rgba(63, 63, 70, 0.5) 50%, rgba(63, 63, 70, 0) 100%) bottom/100% 1px no-repeat transparent;
+}
+
+header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+}
+
+header button#logout {
+    background-color: transparent;
+    color: var(--text-muted);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.85rem;
+    border-radius: 99px; /* Botón en forma de píldora */
+    padding: 8px 16px;
+}
+
+header button#logout:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* El Grid principal */
+#contenedor-asignaturas {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+}
+
+/* La Tarjeta (Glassmorphism sutil) */
+#contenedor-asignaturas > div {
+    /* Fondo semi-transparente con degradado vertical */
+    background: linear-gradient(180deg, rgba(39, 39, 42, 0.4) 0%, rgba(24, 24, 27, 0.6) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px); /* Desenfoque del fondo */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.3s ease;
+}
+
+/* Brillo superior en la tarjeta imitando la luz */
+#contenedor-asignaturas > div::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+}
+
+/* Animación al pasar el ratón (Hover) */
+#contenedor-asignaturas > div:hover {
+    transform: translateY(-4px); /* Se levanta un poco */
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 12px 40px -10px rgba(0, 0, 0, 0.6); /* Sombra suave y amplia */
+}
+
+/* Tipografía de la tarjeta */
+#contenedor-asignaturas > div h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #f4f4f5;
+    line-height: 1.3;
+}
+
+#contenedor-asignaturas > div p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 32px; /* Damos mucho aire antes del botón */
+}
+
+/* El nuevo botón "Ghost" */
+#contenedor-asignaturas > div button {
+    width: 100%;
+    margin-top: auto; /* Lo empuja siempre abajo del todo */
+    background-color: rgba(255, 255, 255, 0.03); /* Casi invisible */
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+/* El botón se ilumina al pasar el ratón */
+#contenedor-asignaturas > div button:hover {
+    background-color: var(--text-primary);
+    color: var(--bg-base); /* Texto oscuro al iluminarse */
+    border-color: var(--text-primary);
+}
+
+/* ==========================================
+   5. VENTANAS MODALES (Estilo minimalista)
+   ========================================== */
+.modal-oculto {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px); /* Efecto cristal ahumado */
+}
+
+.modal-contenido {
+    background-color: var(--bg-base);
+    border: 1px solid var(--border-light);
+    margin: 5vh auto;
+    padding: 32px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto; /* Scroll interno si hay muchas notas */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+#modal-titulo {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.modal-seccion {
+    margin-bottom: 32px;
+}
+
+.modal-seccion h3 {
+    font-size: 1.1rem;
+    margin-bottom: 16px;
+    color: var(--text-primary);
+}
+
+.cerrar-modal {
+    color: var(--text-muted);
+    float: right;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.cerrar-modal:hover {
+    color: var(--text-primary);
+}
+
+/* Listas dentro de los modales */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+ul li {
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+ul li strong {
+    color: var(--text-primary);
+}
+
+ul li:last-child {
+    border-bottom: none;
+}
+
+/* Formularios dentro del modal */
+#form-nueva-falta {
+    background-color: var(--bg-surface);
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-light);
+    align-items: center; /* Alinea los inputs horizontalmente */
+}
+
+#form-nueva-nota {
+    margin: 0 auto; /* Centrar en el segundo modal */
+}
+
+/* ==========================================
+   6. BARRA DE PROGRESO DE FALTAS (Dark Mode Safe)
+   ========================================== */
+.progreso-contenedor {
+    width: 100%;
+    background-color: var(--bg-input);
+    border-radius: 99px; /* Bordes totalmente curvos */
+    overflow: hidden;
+    margin-bottom: 20px;
+    height: 8px; /* Más fina y elegante */
+}
+
+.progreso-relleno {
+    height: 100%;
+    width: 0%;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 99px;
+}
+
+/* Colores adaptados para no brillar demasiado sobre fondo negro */
+.progreso-verde { background-color: #34d399; }
+.progreso-naranja { background-color: #fbbf24; }
+.progreso-rojo { background-color: #f87171; }
+
+.progreso-texto {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.progreso-texto strong {
+    color: var(--text-primary);
+}
