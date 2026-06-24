@@ -3,6 +3,7 @@ from passlib.context import CryptContext
 import jwt
 from fastapi.security import OAuth2PasswordBearer
 from dotenv import load_dotenv
+from fastapi import HTTPException, status
 import os
 
 # Cargamos las variables de entorno desde el archivo .env
@@ -32,3 +33,30 @@ def crear_token_acceso(data: dict, expires_delta: timedelta | None = None):
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
+
+def verificar_token_acceso(token: str):
+    """
+    Recibe el token JWT, comprueba que no esté manipulado ni caducado, 
+    y devuelve el email del usuario.
+    """
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub")
+        if email is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, 
+                                detail="Usuario Invalido")
+        return email
+    
+    # 3. Control de errores de seguridad
+    except jwt.ExpiredSignatureError:
+        # Salta si han pasado los 30 minutos de caducidad
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, 
+            detail="El token ha caducado. Por favor, inicia sesión de nuevo."
+        )
+    except jwt.PyJWTError:
+        # Salta si alguien se ha inventado el token o lo ha modificado a mano
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, 
+            detail="Token inválido o credenciales incorrectas."
+        )
