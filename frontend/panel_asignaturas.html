@@ -3,19 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/styles.css" rel="stylesheet">
     <title>Mi Panel - GestorAlumno</title>
 </head>
 <body>
 
     <header>
         <h1>Mis Asignaturas</h1>
-        <button id="btn-cerrar-sesion">Cerrar Sesión</button>
+        <button id="logout">Cerrar Sesión</button>
     </header>
     
     <main id="contenedor-asignaturas">
         <p>Cargando datos...</p>
     </main>
 
+    <div id="mi-modal" class="modal-oculto">
+        <div class="modal-contenido">
+            <span class="cerrar-modal" id="btn-cerrar-modal">&times;</span>
+            <h2 id="modal-titulo">Detalles de la Asignatura</h2>
+            
+            <div class="modal-seccion">
+                <h3>Notas</h3>
+                <ul id="lista-notas"></ul>
+            </div>
+
+            <div class="modal-seccion">
+                <h3>Faltas de Asistencia</h3>
+                <form id="form-nueva-falta" style="margin-bottom: 15px; display: flex; gap: 10px;">
+                    <input type="date" id="input-fecha-falta" required>
+                    <input type="number" id="input-horas-falta" placeholder="Nº Horas" min="1" max="10" required style="width: 80px;">
+                    <button type="submit">Añadir Falta</button>
+                </form>
+                <ul id="lista-faltas"></ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-nueva-nota" class="modal-oculto">
+        <div class="modal-contenido" style="max-width: 400px; text-align: center;">
+            <span class="cerrar-modal" id="btn-cerrar-modal-nota">&times;</span>
+            <h2>Añadir Nueva Nota</h2>
+            <br>
+            <form id="form-nueva-nota" style="display: flex; flex-direction: column; gap: 15px;">
+                <input type="text" id="input-nombre-examen" placeholder="Ej. Examen Tema 1" required>
+                <input type="number" id="input-valor-nota" placeholder="Nota (0-10)" step="0.1" min="0" max="10" required>
+                <input type="number" id="input-peso-nota" placeholder="Peso en la evaluación (%)" min="1" max="100" required>
+                <button type="submit" style="padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">Guardar Nota</button>
+            </form>
+        </div>
+    </div>
+
     <script src="js/panel.js"></script>
+    <script src="js/modal.js"></script>
 </body>
 </html>
