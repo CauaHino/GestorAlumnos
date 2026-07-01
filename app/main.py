@@ -1,3 +1,5 @@
+from datetime import date
+
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
@@ -40,8 +42,8 @@ class NotaCreate(BaseModel):
     peso_porcentaje: int
 
 class FaltaCreate(BaseModel):
-    asignatura_id: int
-    fecha: str  # Formato "YYYY-MM-DD"
+    fecha: date  # Formato "YYYY-MM-DD"
+    justificada: bool
     horas_perdidas: int
 
 def obtener_alumno(token: str = Depends(auth.oauth2_scheme), db: Session = Depends(get_db)):
