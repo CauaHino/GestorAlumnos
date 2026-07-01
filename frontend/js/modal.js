@@ -21,6 +21,8 @@ async function verDetalles(idAsignatura, horasTotales) {
             
             listaNotas.innerHTML = "";
             listaFaltas.innerHTML = "";
+            notaFinal = 0;
+            sumaPesos = 0;
 
             // Rellenamos las notas y ponemos el botón de abrir el 2º modal
             listaNotas.innerHTML = `<button onclick="abrirModalNota(${idAsignatura}, ${horasTotales})" style="margin-bottom: 10px; cursor:pointer;">+ Añadir Nota</button><br>`;
@@ -28,6 +30,27 @@ async function verDetalles(idAsignatura, horasTotales) {
             if (detalles.notas.length === 0) {
                 listaNotas.innerHTML += "<li>No hay notas registradas.</li>";
             } else {
+                detalles.notas.forEach(nota => {
+                    notaFinal += nota.valor * nota.peso_porcentaje;
+                    sumaPesos += nota.peso_porcentaje;
+                });
+                notaFinal = (notaFinal / sumaPesos).toFixed(2); // Nota media ponderada
+                    // CSS dinámico: si está aprobado (> 5) en verde, si no en rojo
+                const colorNota = notaFinal >= 5 ? "#34d399" : "#f87171";
+
+                // Inyectamos una tarjeta de estado premium dentro del modal
+                listaNotas.innerHTML += `
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 16px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px;">NOTA MEDIA ACTUAL</p>
+                        <span style="font-size: 2.2rem; font-weight: 700; color: ${colorNota};">${notaFinal}</span>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">
+                            Porcentaje evaluado: <strong>${sumaPesos}%</strong> / 100%
+                        </p>
+                    </div>
+                    <p style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 8px; font-weight: 500;">Desglose de exámenes:</p>
+                `;
+
+                // Debajo de la tarjeta de promedio, listamos los exámenes como antes
                 detalles.notas.forEach(nota => {
                     listaNotas.innerHTML += `<li>${nota.nombre_examen}: <strong>${nota.valor}</strong> (${nota.peso_porcentaje}%)</li>`;
                 });
