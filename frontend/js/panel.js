@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", async function() {
             // Si el token caducó (pasaron los 30 min) o es falso
             alert('Tu sesión ha expirado. Vuelve a iniciar sesión.');
             localStorage.removeItem('token');
-            window.location.href = 'index.html';
+            window.location.href = 'login.html';
         } else {
             contenedor.innerHTML = '<p>Error al cargar las asignaturas.</p>';
         }
