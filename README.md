@@ -36,5 +36,5 @@ Asegúrate de tener instalado Python en tu sistema operativo (probado y optimiza
 
 ### 1. Clonar el repositorio e ingresar
 ```bash
-git clone [https://github.com/tu-usuario/GestorAlumno.git](https://github.com/tu-usuario/GestorAlumno.git)
+git clone [https://github.com/CauaHino/GestorAlumnos.git](https://github.com/CauaHino/GestorAlumnos.git)
 cd GestorAlumno
